@@ -1,6 +1,7 @@
 var linkCategory = document.querySelector("#linkCategory");
 
 let linkCategories = [];
+let links = [];
 
 linkCategory.addEventListener('keydown', function (event) {
 
@@ -44,4 +45,5 @@ submitButton.addEventListener('click', (event) => {
     linkCategories = [];
 
     displayLinkCategories();
-})
+
+});
