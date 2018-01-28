@@ -28,6 +28,7 @@ body {
 
 a {
     text-decoration: none;
+    color: rgba(0, 0, 0, 0.85);
 }
 
 a:hover {
@@ -177,6 +178,10 @@ input[type='submit']:hover, button:hover {
 
 .link {
     position: relative;
+}
+
+.link:hover {
+    box-shadow: 0 0 3px var(--main-accent);
 }
 
 #linksList {
