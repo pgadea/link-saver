@@ -5,7 +5,11 @@ const cancelButton = document.querySelector("#cancelButton");
 const addLinkPanel = document.querySelector("#addLinkPanel");
 const addedCategories = document.querySelector("#addedCategories");
 
+const addLinkContainer = document.querySelector("#addLinkContainer");
+
 const linksList = document.querySelector('#linksList');
+
+let editIndex = -1;
 
 let linkCategories = [];
 let links = [
@@ -42,11 +46,12 @@ cancelButton.addEventListener('click', (event) => {
 console.log(addLinkPanel.classList);
 
 function showFormPanel() {
-    addLinkPanel.classList.remove('hidden');
+    addLinkContainer.classList.remove('hidden');
+    displayLinkCategories();
 } 
 
 function hideFormPanel() {
-    addLinkPanel.classList.add('hidden');
+    addLinkContainer.classList.add('hidden');
     clearLinkForm();
 }
 
@@ -96,8 +101,14 @@ submitButton.addEventListener('click', (event) => {
         categories
     }
 
-    //push new link to array
-    links.unshift(newLink);
+    if (editIndex === -1) {
+        //push new link to array
+        links.unshift(newLink);
+    }
+    else {
+        links[editIndex] = newLink;
+        editIndex = -1;
+    }
 
     clearLinkForm();
 
@@ -113,33 +124,53 @@ submitButton.addEventListener('click', (event) => {
 function displayLinks() {
     linksList.innerHTML = '';
 
+    let index = 0;
     for (let link of links) {
         
         let linkHTMLString = `
-        <div class="link panel">
-           <div class="link-options">
-             <button class="btn-sm">Delete</button>
-             <button class="btn-sm">Edit</button>
-           </div>
+        <div class="flex-item">
+            <div class="link panel">
+                <div class="link-options">
+                    <button class="btn-sm" onclick="deleteLink(${index})">Delete</button>
+                    <button class="btn-sm" onclick="editLink(${index})">Edit</button>
+                </div>
 
-           <a href="${link.url}">
-             <h1 class="link-header">${link.title}</h1>
-           </a>
-           <p class="link-date">${Date.now()}</p>
+            <a href="${link.url}">
+                <h1 class="link-header">${link.title}</h1>
+            </a>
+            <p class="link-date">${Date.now()}</p>
 
-           <div class="categories">
-             Categories:`;
-            for (let category of link.categories) {
-                linkHTMLString += `<span class="category">${category}</span>`;
-            }
+                <div class="categories">
+                    Categories:`;
+                for (let category of link.categories) {
+                    linkHTMLString += `<span class="category">${category}</span>`;
+                }
 
-            linkHTMLString += `
-           </div>
+                linkHTMLString += `
+                </div>
+            </div>
          </div>
         `
         ;
 
         linksList.innerHTML += linkHTMLString;
-         
+        index++;
     }
+}
+
+function deleteLink(index) {
+    console.log("Deleting link at index", index);
+    links.splice(index, 1);
+    displayLinks();
+}
+
+function editLink(index) {
+  console.log("Editing link at index", index);
+
+  editIndex = index;
+  linkTitle.value = links[index].title;
+  linkUrl.value = links[index].url;
+  linkCategories = links[index].categories;
+
+  showFormPanel();
 }
